@@ -1,28 +1,19 @@
 import { Router } from "express";
-import { registerUserValidateSchema } from "./user.validation.js";
+import {
+  loginUserValidationSchema,
+  registerUserValidateSchema,
+} from "./user.validation.js";
 import User from "./user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import validateReqBody from "../middleware/validation.middleware.js";
 const router = Router();
 // register user
 // it is just creating a new user
 // forgot not: to hash password before saving unto db
 router.post(
   "/user/register",
-  async (req, res, next) => {
-    //extract data from req.body
-    const data = req.body;
-    // validate data using schema
-    try {
-      const validatedData = await registerUserValidateSchema.validate(data);
-      req.body = validatedData;
-    } catch (error) {
-      // if validatation fails, throw error
-      return res.status(401).send({ message: error.message });
-    }
-
-    //call next function
-    next();
-  },
+  validateReqBody(registerUserValidateSchema),
   async (req, res) => {
     // extract new data from req.body
     const newUser = req.body;
@@ -43,6 +34,37 @@ router.post(
     await User.create(newUser);
     // send response
     return res.status(201).send({ message: "user registered successfully" });
+  }
+);
+// login user
+router.post(
+  "/user/login",
+  validateReqBody(loginUserValidationSchema),
+  async (req, res) => {
+    // extract new data from req.body
+    const loginCredentail = req.body;
+    // find user by email from login credentials
+    const user = await User.findOne({ email: loginCredentail.email });
+    // if user not found throw error
+    if (!user) {
+      return res.status(400).send({ message: "invalid Credentials" });
+    }
+    // check for password match
+    const planePassword = loginCredentail.password;
+    const hashPassword = user.password;
+    const isPasswordMatched = await bcrypt.compare(planePassword, hashPassword);
+
+    // if not match throw error
+    if (!isPasswordMatched) {
+      return res.status(400).send({ message: "invalid Credentials" });
+    }
+    // generate access token
+    const payload = { email: user.email };
+    const token = jwt.sign(payload, "123456789abcdefghi");
+    // to hide password
+    user.password = undefined;
+    // send response
+    return res.status(200).send({ message: "success" });
   }
 );
 export default router;

@@ -35,3 +35,13 @@ export const registerUserValidateSchema = yup.object({
       "gender must be either male or female or preferNotToSay"
     ),
 });
+
+export const loginUserValidationSchema = yup.object({
+  email: yup
+    .string()
+    .required("email must be required")
+    .email("must be a valid email")
+    .lowercase()
+    .trim(),
+  password: yup.string().required("password must be required"),
+});
