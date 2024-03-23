@@ -23,7 +23,7 @@ const productScema = new mongoose.Schema(
       trim: true,
       enum: [
         "grocery",
-        "electronocs",
+        "electronics",
         "furniture",
         "electrical",
         "kitchen",
@@ -60,6 +60,7 @@ const productScema = new mongoose.Schema(
     },
     image: {
       type: String,
+      default: null,
       required: false,
     },
   },

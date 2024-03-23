@@ -64,7 +64,9 @@ router.post(
     // to hide password
     user.password = undefined;
     // send response
-    return res.status(200).send({ message: "success" });
+    return res
+      .status(200)
+      .send({ message: "success", user: user, token: token });
   }
 );
 export default router;
