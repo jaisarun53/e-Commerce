@@ -2,6 +2,7 @@ import expresss from "express";
 import connectDB from "./connect.db.js";
 import userRoutes from "./src/user/user.route.js";
 import productRoutes from "./src/product/product.route.js";
+import cartRoutes from "./src/cart/cart.route.js";
 const app = expresss();
 // to make  app understand json
 app.use(expresss.json());
@@ -10,6 +11,7 @@ connectDB();
 // regiater routes
 app.use(userRoutes);
 app.use(productRoutes);
+app.use(cartRoutes);
 // server and port
 const PORT = 8001;
 app.listen(PORT, () => {
