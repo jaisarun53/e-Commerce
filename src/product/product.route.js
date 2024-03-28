@@ -23,20 +23,7 @@ router.post(
     return res.status(200).send({ message: "product is added successfully" });
   }
 );
-// get product details
-// router.get(
-//   "/product/details/id",
-//   // isUser,
-//   // validateIdFromReqParams,
-//   (req, res) => {
-//     // get product id from params
-//     console.log(req.body);
-//     const productid = req.params.id;
-//     // find the product
-//     // if no product throw error
-//     // send response
-//   }
-// );
+
 router.get(
   "/product/details/:id",
   isUser,
@@ -51,7 +38,9 @@ router.get(
       return res.status(400).send({ message: "product does not exist" });
     }
     // send response
-    return res.status(200).send({ message: "success" });
+    return res
+      .status(200)
+      .send({ message: "success", productdetails: product });
   }
 );
 // delete product
@@ -98,5 +87,6 @@ router.delete(
       .send({ message: "Product is removed successfully." });
   }
 );
+// edit product details
 
 export default router;
