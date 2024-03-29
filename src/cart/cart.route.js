@@ -82,52 +82,29 @@ router.delete("/cart/clear", isBuyer, async (req, res) => {
 });
 
 // remove single product from cart
-// router.delete(
-//   "/cart/item/remove/:id",
-//   isBuyer,
-//   validateIdFromReqParams,
-//   async (req, res) => {
-//     // extract product id from req.params
-//     const productId = req.params.id;
-
-//     // find product by id
-//     const product = await Product.findOne({ _id: productId });
-
-//     // if not product, throw error
-//     if (!product) {
-//       return res.status(404).send({ message: "Product does not exist." });
-//     }
-
-//     // remove product for this user from cart
-//     await Cart.deleteOne({ buyerId: req.loggedInUserId, productId: productId });
-
-//     // send res
-//     return res
-//       .status(200)
-//       .send({ message: "Item is removed from cart successfully." });
-//   }
-// );
-
-// remove item from cart
 router.delete(
   "/cart/item/remove/:id",
   isBuyer,
-  validateReqBody,
+  validateIdFromReqParams,
   async (req, res) => {
-    // extract id from req.params
+    // extract product id from req.params
     const productId = req.params.id;
-    // find product
+
+    // find product by id
     const product = await Product.findOne({ _id: productId });
-    // if not throw error
+
+    // if not product, throw error
     if (!product) {
-      return res.status(400).send({ message: "product does not exist" });
+      return res.status(404).send({ message: "Product does not exist." });
     }
-    // remove product
+
+    // remove product for this user from cart
     await Cart.deleteOne({ buyerId: req.loggedInUserId, productId: productId });
-    // send resopnse
+
+    // send res
     return res
       .status(200)
-      .send({ message: "product is removed from cart successfully" });
+      .send({ message: "Item is removed from cart successfully." });
   }
 );
 // update quantity in cart
@@ -207,36 +184,4 @@ router.put(
   }
 );
 
-// list cart items
-router.get("/cart/item/list", isBuyer, async (req, res) => {
-  // extract buyerId from req.loggedInUserId
-  const buyerId = req.loggedInUserId;
-
-  const cartData = await Cart.aggregate([
-    {
-      $match: {
-        buyerId: buyerId,
-      },
-    },
-    {
-      $lookup: {
-        from: "products",
-        localField: "productId",
-        foreignField: "_id",
-        as: "productDetails",
-      },
-    },
-    {
-      $project: {
-        name: { $first: "$productDetails.name" },
-        brand: { $first: "$productDetails.brand" },
-        unitPrice: { $first: "$productDetails.price" },
-        image: { $first: "$productDetails.image" },
-        orderedQuantity: 1,
-      },
-    },
-  ]);
-
-  return res.status(200).send({ message: "success", cartData: cartData });
-});
 export default router;
