@@ -211,4 +211,5 @@ router.get("/cart/item/list", isBuyer, async (req, res) => {
   // send res
   return res.status(200).send({ message: "success", cartData: cartData });
 });
+
 export default router;
