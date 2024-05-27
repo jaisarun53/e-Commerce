@@ -56,7 +56,7 @@ const productScema = new mongoose.Schema(
       trim: true,
       maxlength: 1000,
       required: true,
-      min: 200,
+      min: 250,
     },
     image: {
       type: String,
