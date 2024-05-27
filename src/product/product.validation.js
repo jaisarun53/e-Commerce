@@ -38,6 +38,7 @@ export const addProductValidationSchema = Yup.object({
     .required("Description is required.")
     .min(10, "Description must be at least 10 characters.")
     .max(1000, "Description must be at max 1000 characters."),
+  image: Yup.string().nullable(),
 });
 
 export const paginationValidationSchema = Yup.object({
