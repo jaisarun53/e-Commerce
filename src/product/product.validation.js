@@ -36,7 +36,7 @@ export const addProductValidationSchema = Yup.object({
     .integer("Available quantity cannot be float number."),
   description: Yup.string()
     .required("Description is required.")
-    .min(250, "Description must be at least 10 characters.")
+    .min(200, "Description must be at least 10 characters.")
     .max(1000, "Description must be at max 1000 characters."),
   image: Yup.string().nullable(),
 });
